@@ -1,197 +1,263 @@
 The AI Creative Studio
 
-Tagline: A location-aware creative generation engine that transforms a brand’s logo and product image into 10+ hyper-personalized ad creatives with AI-generated captions in under 60 seconds.
+A location-aware creative generation engine that transforms a brand’s logo, product image, and contextual signals into 10+ hyper-personalized ad creatives with AI-generated captions — all in under 60 seconds.
 
-1. The Problem (Real World Scenario)
+1. Problem Overview
 
-Modern marketing teams often spend days creating slight variations of the same creative for different regions, weather conditions, seasons, and audience groups. Designers repeat the same workflow manually: adjust colors, change backgrounds, localize captions, and personalize visuals based on geography or timing.
+Marketing teams spend days producing minor variations of the same creative for different regions, weather conditions, seasons, and audience segments.
+This repetitive workflow — changing backgrounds, colors, themes, and localized text — is slow and not scalable. As a result, brands miss contextual opportunities like:
 
-This process is slow, unscalable, and often lacks real-world relevance. Brands miss out on contextual opportunities such as “Rainy day coffee ads in Bangalore”, “Sunny afternoon skincare ads for Chennai”, or “Weekend mall shopper ads for Gurgaon”.
+A monsoon-themed beverage ad for Bangalore
+
+A sunny-day skincare creative for Chennai
+
+A mall-footfall weekend ad for Gurgaon
+
+Traditional tools generate pretty images, but not contextually relevant ad creatives.
 
 2. My Solution
 
-I built The AI Creative Studio, an auto-creative engine that uses location, weather, and contextual intelligence—similar to the signals GroundTruth leverages in advertising—to automatically generate hyper-personalized creatives.
+The AI Creative Studio automatically generates a full set of hyperlocal, context-driven creatives using:
 
-A user uploads a brand logo and product image, and in under a minute receives a ZIP file containing:
+Location intelligence
 
-10+ high-resolution ad creative variations
+Weather & time signals
 
-Captions aligned with weather, location, and POI context
+Nearby POIs & local culture themes
 
-A metadata file describing which context influenced each creative
+Brand color extraction + guided brand consistency prompts
 
-This system allows brands to produce hyperlocal creative campaigns instantly, with no manual editing.
+Text + visuals fused into creative metadata
 
-3. Expected End Result
+What the user gets (inside a ZIP):
+
+10+ high-resolution creatives
+
+Brand-aligned, context-aware captions
+
+Metadata showing which context influenced each creative
+
+All generated in under a minute.
+
+3. What Makes It Innovative
+a. Context Engine Inspired by GroundTruth
+
+Each creative uses:
+
+Current weather
+
+Temperature & time-of-day
+
+Seasonality
+
+POIs within radius
+
+City-specific culture or festivals
+
+Hyperlocal mood signals (e.g., “Bangalore monsoon vibes”)
+
+b. Brand Intelligence Layer
+
+I extract:
+
+Brand colors
+
+Logo palette
+
+Product category
+
+…and enforce them inside prompts using:
+
+Structured prompt templates
+
+Palette-aware image conditioning
+
+Hard logo placement instructions
+
+c. Local Culture Personalization
+
+Using LLM extraction + (future) web-scraping, the system can incorporate:
+
+Region-specific preferences
+
+Local shopping behavior
+
+Festival season (Diwali, Pongal, Durga Puja, Onam)
+
+City vibes (e.g., Chennai coastal, Delhi nightlife, Bangalore café culture)
+
+This makes each creative not just visually correct, but culturally relevant.
+
+d. Caption Engine (Gemini for Text)
+
+Captions are generated using:
+
+Tone consistency
+
+Regionally relevant vocabulary
+
+Weather/time references
+
+Category-specific CTAs
+
+With quality checks for:
+
+Length
+
+Hallucination-free claims
+
+Brand-safe language
+
+e. Image Generation (OpenAI / SDXL)
+
+Using:
+
+OpenAI DALL·E for cleaner ad-quality compositions
+
+Stable Diffusion XL for custom styles
+
+Each prompt blends:
+
+Product image
+
+Logo
+
+Context data
+
+Brand palette enforcement
+
+POI & local culture theme
+
+4. Expected Output
 
 Input:
-Brand logo + product image
-
-Action:
-Run the generator or use the UI
-
-Output:
-A downloadable ZIP containing:
-
-AI-generated creatives
-
-Captions tuned to time, weather, and location
-
-Context metadata
-
-Example outputs:
-
-A monsoon-themed coffee ad for Bangalore
-
-A sunny-day fitness drink ad for Chennai
-
-A mall-footfall evening ad for Delhi NCR
-
-4. Technical Approach
-
-I designed the system to combine Generative AI with real-world context signals (weather, POIs, geolocation) to make creatives meaningfully personalized.
-
-Ingestion (User Upload)
-
-The user provides:
 
 Brand logo
 
 Product image
 
-Optional brand color palette
+(Optional) Brand colors
 
-Context Engine (Location + Weather Intelligence)
+Output ZIP contains:
 
-I enrich each creative request using publicly available APIs to determine:
+/images          → all generated creatives  
+/captions.txt    → caption set  
+/metadata.json   → context signals per image  
 
-Current weather
+5. Technical Architecture
+Core Layers
 
-Temperature and time-of-day
+Upload Module (FastAPI)
 
-POIs near the target coordinates
+Context Enrichment Engine
 
-Seasonality
+Weather API
 
-This data directly influences creative prompts.
+Geolocation API
 
-Creative Generation (Stable Diffusion / DALL-E 3)
+POI API
 
-I built a structured prompt system that blends:
+Time/Season logic
 
-Product image
+Brand Intelligence Extractor
 
-Brand logo placement
+LLM-based color/theme extraction
 
-Context (weather, location, POI theme)
+(Future) Web scraping for brand tone & campaigns
 
-Brand colors
+Prompt Builder
 
-Each run produces 10+ variants with different contexts.
+Adaptive prompt templates
 
-Caption Generation (LLM: Gemini / GPT)
+Logo placement instructions
 
-I feed the creative metadata to an LLM to produce:
+Palette conditioning
 
-Regionally relevant captions
+Image Generator
 
-CTA lines
+DALL·E 3 (OpenAI)
 
-Weather-aware messaging
+SDXL (local)
 
-Tone-consistent outputs
+Caption Generator
 
-Guardrails
-
-To maintain quality I implemented:
-
-Palette enforcement based on brand colors
-
-A “strict factual mode” to prevent hallucinated claims
-
-Validation on caption length and relevance
+Gemini 1.5 Pro
 
 Packaging
 
-All outputs are bundled into a structured ZIP:
+Pillow
 
-images/
+zipfile
 
-captions.txt
-
-metadata.json
-
-5. Tech Stack
-
-Language: Python 3.11
-
-Image Generation: Stable Diffusion XL / DALL-E 3 API
-
-Text Generation: Gemini 1.5 Pro or GPT-4.1
-
-Context APIs: Weather API, Geolocation API, POI API
-
-Backend Framework: FastAPI
-
-Containerization: Docker & Docker Compose
-
-Packaging: Pillow + zipfile
-
-Storage: Local filesystem or S3
-
-6. Challenges & Learnings
-Challenge 1: Brand Consistency
-
-The initial models ignored brand colors and misplaced the logo.
-Fix: I implemented masked image composition and strict structured prompts.
-
-Challenge 2: Context-Relevant Captions
-
-Some early captions were too generic.
-Fix: I switched to few-shot guided prompts and added length/style validation.
-
-Challenge 3: Missing Context Data
-
-Some geographic inputs had incomplete weather or POI datasets.
-Fix: I added fallback logic like seasonal defaults or generalized templates.
+6. Repository Structure
+ai-creative-studio/
+│
+├── app/
+│   ├── api/
+│   │   ├── upload.py
+│   │   ├── generate.py
+│   │   └── health.py
+│   ├── core/
+│   │   ├── context_engine.py
+│   │   ├── brand_extractor.py
+│   │   ├── prompt_builder.py
+│   │   └── caption_generator.py
+│   ├── services/
+│   │   ├── dalle_service.py
+│   │   ├── sdxl_service.py
+│   │   └── weather_service.py
+│   ├── utils/
+│   │   ├── image_utils.py
+│   │   ├── palette_utils.py
+│   │   └── zip_utils.py
+│   └── main.py
+│
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── README.md
 
 7. How to Run
-# 1. Clone Repository
+1. Clone Repository
 git clone https://github.com/username/ai-creative-studio.git
 cd ai-creative-studio
 
-# 2. Add API Keys
-export IMAGE_API_KEY="your_key_here"
-export TEXT_API_KEY="your_key_here"
-export WEATHER_API_KEY="your_key_here"
+2. Add Keys
+export IMAGE_API_KEY="your_openai_key"
+export TEXT_API_KEY="your_gemini_key"
+export WEATHER_API_KEY="your_weather_key"
 
-# 3. Build & Run Docker Container
+3. Build & Run
 docker-compose up --build
 
-# 4. Test from Local UI
-# Visit:
+4. Test
+
+Visit:
+
 http://localhost:8000
 
-# Upload logo + product image to generate creatives
 
-8. Why I Chose This Problem Statement
+Upload logo + product image.
 
-I selected Problem Statement H-003 because it sits at the intersection of Generative AI and context-driven advertising, which is core to GroundTruth’s philosophy. GroundTruth’s competitive advantage comes from location and mobility signals; I wanted to extend that thinking into creative generation.
+8. Why I Picked This Problem
 
-Most generative tools only produce visually appealing images. I wanted to build a system that produces contextually intelligent creatives—ads that adapt to the environment in which they will be shown.
+This challenge aligns perfectly with my interest in Generative AI applied to AdTech.
+GroundTruth’s strength lies in mobility and location intelligence — and I wanted to extend that to creative production.
 
-This makes creative production scalable, relevant, and operationally efficient.
+Instead of making yet another design generator, I built something that creates context-intelligent, culturally aligned, brand-safe ad creatives at scale.
 
-9. Future Enhancements (If Time Permits)
+9. Future Enhancements
 
-Add multilingual captions for regional campaigns
+Automatic festival-based creative sets
 
-Add A/B scoring using CTR benchmarks
+Category-aware design templates
 
-Detect brand fonts and auto-match typography
+Multilingual captioning
 
-Add batch mode to generate 100+ creatives
+Brand font detection & typography matching
 
-Integrate footfall likelihood predictions
+Batch mode (100+ creatives)
 
-Provide a one-click “campaign-ready pack” (banners in 6–8 standard sizes)
+Footfall-likelihood scoring
+
+“Campaign-ready pack” with multiple banner sizes
